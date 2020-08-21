@@ -23,6 +23,8 @@ public class Processor : MonoBehaviour
     [SerializeField] [Range(2, 50)] int bufferSize;
     [SerializeField] [Range(0, 255)] int valueThreshold;
     [SerializeField] int interestingDefectSize = 1500;
+    [SerializeField] Text detectedDefectsTxt;
+    [SerializeField] Text currentThresholdTxt;
 
     int bufferCount = 0;
     Image<Gray, byte> backgroundRemover;
@@ -41,7 +43,6 @@ public class Processor : MonoBehaviour
         CvInvoke.UseOpenCL = true;
         dilateMorphKernel = new Matrix<byte>(new Byte[3, 3] { { 0, 255, 0 }, { 255, 255, 255 }, { 0, 255, 0 } });
         erodeMorphKernel = new Matrix<byte>(new Byte[3, 3] { { 255, 0, 255 }, { 0, 0, 0 }, { 255, 0, 255 } });
-
     }
     private void OnEnable()
     {
@@ -64,7 +65,8 @@ public class Processor : MonoBehaviour
             {
                 var gray = input.Convert<Gray, byte>();
                 backgroundRemover = backgroundTemp.AddWeighted(gray, 0.5, 0.5, 0);
-                //img.texture = backgroundRemover.AsBitmap().ToTexture2D();
+                Destroy(img.texture);
+                img.texture = backgroundRemover.AsBitmap().ToTexture2D();
             }
             else
             {
@@ -81,10 +83,12 @@ public class Processor : MonoBehaviour
             var eroded = mask.MorphologyEx(Emgu.CV.CvEnum.MorphOp.Erode, erodeMorphKernel, new System.Drawing.Point(1, 1), 5, Emgu.CV.CvEnum.BorderType.Default, new MCvScalar());
             var dilated = eroded.MorphologyEx(Emgu.CV.CvEnum.MorphOp.Dilate, dilateMorphKernel, new System.Drawing.Point(1, 1), 7, Emgu.CV.CvEnum.BorderType.Default, new MCvScalar());
 
+            Destroy(img.texture);
+            img.texture = dilated.AsBitmap().ToTexture2D();
 
             // Contour Detection
             Image<Gray, byte> smallerImage = dilated.Resize((int)((float)dilated.Width * 0.2), (int)((float)dilated.Height * 0.2), Emgu.CV.CvEnum.Inter.Linear);
-            //img.texture = smallerImage.AsBitmap().ToTexture2D();
+            
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             double largestArea = 0;
             int indexLargest = 0;
@@ -168,12 +172,7 @@ public class Processor : MonoBehaviour
                         Debug.Log("RELEASE");
                     }
 
-                    //defects.Dispose();
-                    //hull.Dispose();
-                    //contours.Dispose();
-                    //largest.Dispose();
-
-                   //Debug.Log($"defect size {defectCounter}");
+                    detectedDefectsTxt.text = defectCounter.ToString();
                 }
                 catch (Exception e)
                 {
@@ -190,5 +189,16 @@ public class Processor : MonoBehaviour
             chPoints.Clear();
             contourPoints.Clear();
         }
+    }
+
+    public void ResetCalibration()
+    {
+        bufferCount = 0;
+    }
+
+    public void SetDefectThreshold(float val)
+    {
+        interestingDefectSize = (int)val;
+        currentThresholdTxt.text = val.ToString();
     }
 }
