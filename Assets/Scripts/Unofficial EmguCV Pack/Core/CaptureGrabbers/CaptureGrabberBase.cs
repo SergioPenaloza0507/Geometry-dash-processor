@@ -7,6 +7,6 @@ namespace UnofficialEmguCVPackForUnity.Core.VideoCaptureGrabbers
 {
     public abstract class CaptureGrabberBase : MonoBehaviour
     {
-        public Texture2DEvent onConvertedFrame;
+        [HideInInspector]public Texture2DEvent onConvertedFrame;
     }
 }
