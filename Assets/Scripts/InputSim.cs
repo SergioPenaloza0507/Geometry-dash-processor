@@ -217,7 +217,7 @@ public static class InputSim
     public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
 
     [DllImport("user32.dll")]
-    public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, intPtr dwExtraInfo);
+    public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, IntPtr dwExtraInfo);
 	[StructLayout(LayoutKind.Sequential)]
 	public struct MOUSEINPUT
 	{

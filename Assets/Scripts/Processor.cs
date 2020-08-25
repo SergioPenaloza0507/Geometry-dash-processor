@@ -23,13 +23,6 @@ public class Processor : MonoBehaviour
     public bool OutputContour;
     public bool OutputConvexHull;
 
-
-    [HideInInspector]
-    public VectorArrayEvent 
-        onOutputContour,
-        onOuputConvexHull,
-        onOuputConvexityDefects;
-
     [HideInInspector]
     public Texture2DEvent onOutputImage;
 

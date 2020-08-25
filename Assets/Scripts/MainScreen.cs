@@ -24,9 +24,7 @@ public class MainScreen : MonoBehaviour
         Processor instance = Processor.Instance;
         instance.onOutputImage.AddListener((val) => outputImg.texture = val);
         instance.onDetectedDefects.AddListener((int val) => detectedTxt.text = val.ToString());
-        
     }
-
     private void OnDisable()
     {
         grabber.onProcessableframeCaptured.RemoveAllListeners();
@@ -34,6 +32,6 @@ public class MainScreen : MonoBehaviour
         Processor instance = Processor.Instance;
         instance.onOutputImage.RemoveAllListeners();
         instance.onDetectedDefects.RemoveAllListeners();
-        
+
     }
 }
