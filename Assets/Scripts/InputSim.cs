@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Runtime.InteropServices;
 using System;
 
@@ -27,10 +25,14 @@ public static class InputSim
     [DllImport("user32.dll")]
     public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
 
+    [DllImport("user32.dll")]
+    public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, IntPtr dwExtraInfo);
+
 
     public const int MOUSE_LEFTDOWN = 0x02;
     public const int MOUSE_LEFTUP = 0x04;
-    public const byte KYB_ESC = 0x1B;
+    public const int VIRTUAL_ESC = 0x1b;
+    public const int ESC_SCANCODE = 01;
 
     public static void LeftClick(int xpos, int ypos)
     {
